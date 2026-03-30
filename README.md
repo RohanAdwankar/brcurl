@@ -12,4 +12,4 @@ to print the fully rendered html after js executes use: `brcurl -v https://githu
 
 to see what it does check out the examples of text output in [bcurl](./tests/bcurl/003_https___github_com_RohanAdwankar.txt), screenshots in [bcurl-o](./tests/bcurl-o/003_https___github_com_RohanAdwankar.png), rendered html in [bcurl-v](./tests/bcurl-v/003_https___github_com_RohanAdwankar.html), and the baseline curls in [curl](./tests/curl/003_https___github_com_RohanAdwankar.html)
 
-as you can see (for example from opening the youtube curl in a browser vs opening bcurl -v in the browser), the html bcurl generates has the neccesary information about the layout for the agent to iterate on the frontend while the curl site is blank 
+as you can see (for example from opening the youtube curl in a browser vs opening bcurl -v in the browser), the html bcurl generates has the neccesary information about the layout and content for the agent to iterate on the frontend while the curl site is blank 
