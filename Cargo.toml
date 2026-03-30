@@ -1,0 +1,13 @@
+[package]
+name = "brcurl"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "brcurl"
+path = "src/bin/brcurl.rs"
+
+[dependencies]
+anyhow = "1.0"
+clap = { version = "4.5", features = ["derive"] }
+headless_chrome = "1.0"
