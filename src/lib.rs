@@ -1,5 +1,5 @@
-use std::path::PathBuf;
 use std::net::TcpListener;
+use std::path::PathBuf;
 use std::thread;
 use std::time::Duration;
 
@@ -21,8 +21,15 @@ pub struct Cli {
     pub time: u64,
 
     /// Save a screenshot of the rendered page.
-    #[arg(short = 'o', long = "output")]
-    pub output: Option<PathBuf>,
+    #[arg(
+        short = 'o',
+        long = "output",
+        num_args = 0..=1,
+        default_missing_value = "__AUTO__",
+        require_equals = true,
+        value_name = "OUTPUT"
+    )]
+    pub output: Option<String>,
 
     /// Print rendered DOM instead of visible text.
     #[arg(long = "dom", action = ArgAction::SetTrue)]
@@ -36,8 +43,9 @@ pub fn run(cli: Cli) -> Result<()> {
         .port(Some(choose_debug_port()?))
         .build()
         .map_err(|err| anyhow!("failed to build browser launch options: {err}"))?;
-    let browser = Browser::new(options)
-        .context("failed to launch a Chromium-compatible browser; install Chrome/Chromium to use brcurl")?;
+    let browser = Browser::new(options).context(
+        "failed to launch a Chromium-compatible browser; install Chrome/Chromium to use brcurl",
+    )?;
     let tab = browser.new_tab().context("failed to create browser tab")?;
 
     tab.navigate_to(&cli.url)
@@ -51,8 +59,8 @@ pub fn run(cli: Cli) -> Result<()> {
         thread::sleep(Duration::from_secs(cli.time));
     }
 
-    if let Some(path) = cli.output.as_deref() {
-        save_screenshot(&tab, path)?;
+    if let Some(path) = output_path(&cli.url, cli.output) {
+        save_screenshot(&tab, &path)?;
     }
 
     let rendered = if cli.dom {
@@ -199,5 +207,29 @@ fn extract_useful_text(tab: &Tab) -> Result<String> {
         )
     } else {
         Ok(text)
+    }
+}
+
+fn output_path(url: &str, output: Option<String>) -> Option<PathBuf> {
+    match output {
+        None => None,
+        Some(path) if path == "__AUTO__" => Some(PathBuf::from(format!("{}.png", slugify(url)))),
+        Some(path) => Some(PathBuf::from(path)),
+    }
+}
+
+fn slugify(input: &str) -> String {
+    let mut slug = input
+        .chars()
+        .map(|ch| if ch.is_ascii_alphanumeric() { ch } else { '_' })
+        .collect::<String>();
+    slug.truncate(80);
+    while slug.ends_with('_') {
+        slug.pop();
+    }
+    if slug.is_empty() {
+        "brcurl".to_owned()
+    } else {
+        slug
     }
 }

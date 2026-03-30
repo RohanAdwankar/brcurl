@@ -1,11 +1,13 @@
 # brcurl - curl that acts like a browser
 
-Agents can easily run curls but sometimes the result isn't useful/interpretable to agents/humans
+agents can easily run curls but many times the result isn't useful/interpretable for humans
 
-with brcurl you see what the user actually sees when they are in a browser which is executing the js/wasm so that we see what actually loads
+with brcurl you see what the user actually sees when they are in a browser which is executing the js/wasm
 
-to see the result when a user has had the output open for 60 seconds use: `brcurl -t 60 https://example.com`
+its also useful when using coding agents for wasm or web dev which prefer CLI tools so that the agent understands what is on the site 
 
-to save a screenshot in addition to the default stdout use: `brcurl -o page.png https://example.com`
+to see the result when a user has had the output open for 60 seconds use: `brcurl -t 60 https://github.com/RohanAdwankar`
 
-to compare `curl` output against `brcurl` for every URL in `tests/url.txt`, run: `tests/compare.sh`
+to save a screenshot in addition to the default stdout use: `brcurl -o https://github.com/RohanAdwankar`
+
+to see what it does check out the examples of text output in [bcurl](./tests/bcurl/003_https___github_com_RohanAdwankar.txt), screenshots in [bcurl-o](./tests/bcurl/003_https___github_com_RohanAdwankar.png), and the baseline curls in [curl](./tests/curl/003_https___github_com_RohanAdwankar.txt)
