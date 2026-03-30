@@ -6,10 +6,11 @@ INPUT_FILE="${1:-$ROOT_DIR/tests/url.txt}"
 CURL_DIR="${CURL_DIR:-$ROOT_DIR/tests/curl}"
 BRCURL_DIR="${BRCURL_DIR:-$ROOT_DIR/tests/bcurl}"
 BRCURL_O_DIR="${BRCURL_O_DIR:-$ROOT_DIR/tests/bcurl-o}"
+BRCURL_V_DIR="${BRCURL_V_DIR:-$ROOT_DIR/tests/bcurl-v}"
 BRCURL_TIME="${BRCURL_TIME:-5}"
 BRCURL_BIN="${BRCURL_BIN:-$ROOT_DIR/target/debug/brcurl}"
 
-mkdir -p "$CURL_DIR" "$BRCURL_DIR" "$BRCURL_O_DIR"
+mkdir -p "$CURL_DIR" "$BRCURL_DIR" "$BRCURL_O_DIR" "$BRCURL_V_DIR"
 
 (
   cd "$ROOT_DIR"
@@ -44,9 +45,10 @@ while IFS= read -r line || [[ -n "$line" ]]; do
 
   index=$((index + 1))
   stem="$(printf '%03d_%s' "$index" "$(slugify "$url")")"
-  curl_path="$CURL_DIR/$stem.txt"
+  curl_path="$CURL_DIR/$stem.html"
   brcurl_path="$BRCURL_DIR/$stem.txt"
   brcurl_o_path="$BRCURL_O_DIR/$stem.png"
+  brcurl_v_path="$BRCURL_V_DIR/$stem.html"
 
   if ! curl -L --silent --show-error "$url" >"$curl_path"; then
     write_error "$curl_path" "curl failed for $url"
@@ -59,5 +61,9 @@ while IFS= read -r line || [[ -n "$line" ]]; do
   if ! "$BRCURL_BIN" -t "$BRCURL_TIME" -o="$brcurl_o_path" "$url" >/dev/null; then
     write_error "${brcurl_o_path%.png}.txt" "brcurl -o failed for $url"
     rm -f "$brcurl_o_path"
+  fi
+
+  if ! "$BRCURL_BIN" -t "$BRCURL_TIME" -v "$url" >"$brcurl_v_path"; then
+    write_error "$brcurl_v_path" "brcurl -v failed for $url"
   fi
 done <"$INPUT_FILE"

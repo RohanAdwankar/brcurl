@@ -31,8 +31,8 @@ pub struct Cli {
     )]
     pub output: Option<String>,
 
-    /// Print rendered DOM instead of visible text.
-    #[arg(long = "dom", action = ArgAction::SetTrue)]
+    /// Print rendered HTML after the page's JS has executed.
+    #[arg(short = 'v', long = "dom", action = ArgAction::SetTrue)]
     pub dom: bool,
 }
 
