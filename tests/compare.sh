@@ -5,7 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 INPUT_FILE="${1:-$ROOT_DIR/tests/url.txt}"
 CURL_DIR="${CURL_DIR:-$ROOT_DIR/tests/curl}"
 BRCURL_DIR="${BRCURL_DIR:-$ROOT_DIR/tests/bcurl}"
-BRCURL_TIME="${BRCURL_TIME:-0}"
+BRCURL_TIME="${BRCURL_TIME:-5}"
 BRCURL_BIN="${BRCURL_BIN:-$ROOT_DIR/target/debug/brcurl}"
 
 mkdir -p "$CURL_DIR" "$BRCURL_DIR"
